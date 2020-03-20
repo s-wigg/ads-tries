@@ -1,0 +1,27 @@
+{
+  "name": "t9-dictionary",
+  "version": "1.0.0",
+  "description": "T9 Dictionary project demonstrating Tries for Ada's Advanced Data Strucutres course",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watch",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/droberts-ada/t9-dictionary.git"
+  },
+  "author": "Dan Roberts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/droberts-ada/t9-dictionary/issues"
+  },
+  "homepage": "https://github.com/droberts-ada/t9-dictionary#readme",
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
