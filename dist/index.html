@@ -9,12 +9,22 @@
   <script src="./main.js"></script>
 </head>
 <body>
-  <h1>T9 Keyboard change</h1>
-  <div class="keyboard">
+  <h1>T9 Keyboard</h1>
 
-  </div>
-
-  <template class="temlate--keyboard-button">
+  <main class="main">
+    <div class="display">
+      <label for="display--numbers">Keys</label>
+      <input name="display--numbers" class="display--input display--numbers" readonly="true">
+  
+      <label for="display--words">Words</label>
+      <input name="display--words" class="display--input display--words" readonly="true">
+    </div>
+    <div class="keyboard">
+  
+    </div>
+  </main>
+  
+  <template class="template--keyboard-button">
     <div class="keyboard-button">
       <div class="keyboard-button--number"></div>
       <div class="keyboard-button--subtext"></div>

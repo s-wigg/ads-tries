@@ -10,6 +10,6 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     watchContentBase: true,
     compress: true,
-    port: 8080
+    port: 9000,
   },
 };

@@ -1,0 +1,50 @@
+.main {
+  width: 12rem;
+}
+
+.display {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+
+  gap: 2px;
+  padding: 2px;
+}
+
+.display--input {
+  border: 1px solid black;
+}
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  padding: 1px;
+  gap: 1px;
+
+  border: 1px solid #0AA3C2;
+
+  background-color: #dddddd;
+}
+
+.keyboard-button {
+  border: 1px solid #0AA3C2;
+  background-color: white;
+}
+
+.keyboard-button:hover {
+  background-color: #eeeeee
+}
+
+.keyboard-button:active {
+  background-color: #dddddd;
+}
+
+.keyboard-button--number {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.keyboard-button--subtext {
+  text-align: center;
+  color: darkgrey;
+}
