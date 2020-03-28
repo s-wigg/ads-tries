@@ -24,3 +24,8 @@ $ npm test
 ```
 
 Runs jest in watch mode
+
+## Reference
+
+- [List of English words is from Google](https://github.com/first20hours/google-10000-english)
+- [RxJS](https://rxjs-dev.firebaseapp.com/)
