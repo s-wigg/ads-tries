@@ -2,8 +2,12 @@ import keyboardButtons from './keyboard_buttons';
 import * as rxjs from 'rxjs';
 import { map, scan } from 'rxjs/operators'
 
-import wordBlob from '../google-10000-english-usa-no-swears.txt';
+import words10KRaw from '../10000-words.txt';
+const words10K = words10KRaw.split('\n');
+
+
 import WordList from './data_structures/word_list';
+import profile from './performance';
 
 const buildKeyboard = (keyboardContainer, buttonTemplate) => {
   const observables = keyboardButtons.map(button => {
@@ -42,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   keyCodeStream.subscribe(value => numberDisplay.value = value);
 
   const dataStructures = {
-    wordList: new WordList(wordBlob.split('\n')),
+    wordList: new WordList(words10K),
   };
   let selectedDataStructure = dataStructures.wordList;
 
@@ -51,4 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const possibleWords = selectedDataStructure.lookupPrefix(value);
     wordsDisplay.value = possibleWords.slice(0, 5).join(', ');
   });
+
+  console.log(profile(WordList));
 });
+
+
+
+

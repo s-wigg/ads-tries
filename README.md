@@ -27,5 +27,6 @@ Runs jest in watch mode
 
 ## Reference
 
-- [List of English words is from Google](https://github.com/first20hours/google-10000-english)
+- [10K words comes from Google](https://github.com/first20hours/google-10000-english)
+- [100K words comes from dwyl](https://github.com/dwyl/english-words)
 - [RxJS](https://rxjs-dev.firebaseapp.com/)
