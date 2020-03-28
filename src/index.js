@@ -2,6 +2,9 @@ import keyboardButtons from './keyboard_buttons';
 import * as rxjs from 'rxjs';
 import { map, scan } from 'rxjs/operators'
 
+import wordBlob from '../google-10000-english-usa-no-swears.txt';
+import WordList from './data_structures/word_list';
+
 const buildKeyboard = (keyboardContainer, buttonTemplate) => {
   const observables = keyboardButtons.map(button => {
     const buttonFragment = buttonTemplate.content.cloneNode(true);
@@ -21,19 +24,31 @@ const buildKeyboard = (keyboardContainer, buttonTemplate) => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const keyboard = document.querySelector('.keyboard');
   const buttonTemplate = document.querySelector('.template--keyboard-button');
 
   const keyPressObservable = buildKeyboard(keyboard, buttonTemplate);
 
   const numberDisplay = document.querySelector('.display--numbers');
-  keyPressObservable.pipe(
+  const keyCodeStream = keyPressObservable.pipe(
     scan((value, key) => {
       if (key === '#') {
         return value.slice(0, -1);
       }
       return value + key;
     }, ''),
-  ).subscribe(value => numberDisplay.value = value);
+  );
+  
+  keyCodeStream.subscribe(value => numberDisplay.value = value);
+
+  const dataStructures = {
+    wordList: new WordList(wordBlob.split('\n')),
+  };
+  let selectedDataStructure = dataStructures.wordList;
+
+  const wordsDisplay = document.querySelector('.display--words');
+  keyCodeStream.subscribe(value => {
+    const possibleWords = selectedDataStructure.lookupPrefix(value);
+    wordsDisplay.value = possibleWords.slice(0, 5).join(', ');
+  });
 });
