@@ -11,23 +11,25 @@
 </head>
 
 <body>
-  <h1>T9 Keyboard</h1>
-
   <main class="main">
-    <div class="display">
-      <label for="display--numbers">Keys</label>
-      <input name="display--numbers" class="display--input display--numbers" readonly="true">
+    <section class="phone">
+      <h1>T9 Keyboard</h1>
+      <div class="display">
+        <label for="display--numbers">Keys</label>
+        <input name="display--numbers" class="display--input display--numbers" readonly="true">
 
-      <label for="display--words">Words</label>
-      <input name="display--words" class="display--input display--words" readonly="true">
-    </div>
+        <label for="display--words">Words</label>
+        <input name="display--words" class="display--input display--words" readonly="true">
+      </div>
 
-    <div class="keyboard"></div>
+      <div class="keyboard"></div>
+    </section>
+
 
     <section class="performance">
       <h2>Performance Tests</h2>
-      <label for="performance--timeout">Timeout (secs)</label>
-      <input name="performance--timeout">
+      <label for="performance--timeout">Timeout (seconds)</label>
+      <input name="performance--timeout" value="30">
       <ul class="performance--report-list"></ul>
     </section>
   </main>

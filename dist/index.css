@@ -4,7 +4,13 @@ ul {
 }
 
 .main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.phone {
   width: 12rem;
+  margin: 0 1rem;
 }
 
 .display {
@@ -26,18 +32,18 @@ ul {
   padding: 1px;
   gap: 1px;
 
-  border: 1px solid #0AA3C2;
+  border: 1px solid #0aa3c2;
 
   background-color: #dddddd;
 }
 
 .keyboard-button {
-  border: 1px solid #0AA3C2;
+  border: 1px solid #0aa3c2;
   background-color: white;
 }
 
 .keyboard-button:hover {
-  background-color: #eeeeee
+  background-color: #eeeeee;
 }
 
 .keyboard-button:active {
@@ -54,13 +60,19 @@ ul {
   color: darkgrey;
 }
 
+.performance {
+  min-width: 12rem;
+  max-width: 25rem;
+  margin: 0 1rem;
+}
+
 .performance-report {
   border: 1px solid black;
 }
 
 .performance-task {
   width: 90%;
-  margin: .5rem auto;
+  margin: 0.5rem auto;
 }
 
 .performance-task:not(:first-child) {
@@ -71,7 +83,7 @@ ul {
   height: 1rem;
   width: 1.5rem;
   padding: 0;
-  background-color: #E7175F;
+  background-color: #e7175f;
   border: 1px solid black;
   border-radius: 4px;
 }
@@ -88,6 +100,6 @@ ul {
 }
 
 .performance-task--progress-bar {
-  background-color: #0AA3C2;
+  background-color: #0aa3c2;
   height: 100%;
 }
