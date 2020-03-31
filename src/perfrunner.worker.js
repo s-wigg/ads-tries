@@ -24,8 +24,6 @@ class PerfRunner {
   }
 
   handleMessage = (event) => {
-    console.log(`Worker received ${event.data}`);
-
     const message = event.data;
 
     switch (message.type) {

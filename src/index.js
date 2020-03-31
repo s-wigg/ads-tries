@@ -13,15 +13,8 @@ import PerformanceReport from './components/PerformanceReport';
 import Keyboard from './components/Keyboard';
 
 
-
-document.addEventListener("DOMContentLoaded", () => {
-  const keyboardElement = document.querySelector('.keyboard');
-
-  console.log(Keyboard);
-  const keyboard = new Keyboard(keyboardElement);
-
-  const numberDisplay = document.querySelector('.display--numbers');
-  const keyCodeStream = keyboard.keyPressObservable.pipe(
+const buildDisplay = (keyPressObservable) => {
+  const keyCodeStream = keyPressObservable.pipe(
     scan((value, key) => {
       if (key === '#') {
         return value.slice(0, -1);
@@ -30,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, ''),
   );
 
+  const numberDisplay = document.querySelector('.display--numbers');
   keyCodeStream.subscribe(value => numberDisplay.value = value);
 
   const dataStructures = {
@@ -42,7 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const possibleWords = selectedDataStructure.lookupPrefix(value);
     wordsDisplay.value = possibleWords.slice(0, 5).join(', ');
   });
+}
 
+document.addEventListener("DOMContentLoaded", () => {
+  const keyboardElement = document.querySelector('.keyboard');
+  const keyboard = new Keyboard(keyboardElement);
+
+  buildDisplay(keyboard.keyPressObservable);
+  
   // console.log(profile(WordList));
   const perfReport = new PerformanceReport(WordList);
   // perfReport.startRun();
