@@ -8,11 +8,10 @@ import words100KRaw from '../100000-words.txt';
 import { executionTimeMs } from './performance';
 import sizeof from "object-sizeof";
 
-console.log('inside the perfrunner file');
+const WORK_INCREMENT = 1024;
 
 class PerfRunner {
   constructor() {
-    console.log('constructing worker');
     this.tasks = [];
     // {
     //   id: number,
@@ -87,9 +86,9 @@ class PerfRunner {
       return;
     }
 
-    const loadIncrement = 500;
+    
     const wordsRemaining = task.dictionary.length - task.wordsLoaded;
-    const wordsToLoad = Math.min(loadIncrement, wordsRemaining);
+    const wordsToLoad = Math.min(WORK_INCREMENT, wordsRemaining);
 
     const runTimeMs = executionTimeMs(() => {
       for (let i = task.wordsLoaded;
