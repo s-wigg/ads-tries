@@ -1,6 +1,7 @@
 import keyboardButtons from './keyboard_buttons';
 import * as rxjs from 'rxjs';
-import { map, scan } from 'rxjs/operators'
+import { map, scan } from 'rxjs/operators';
+import prettyBytes from 'pretty-bytes';
 
 import words10KRaw from '../10000-words.txt';
 const words10K = words10KRaw.split('\n');
@@ -64,6 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // perfReport.startRun();
 });
 
+
+
+
+
+
 const loadTemplate = (name) => {
   const selector = `.template--${name}`;
   const template = document.querySelector(selector);
@@ -75,6 +81,9 @@ const loadTemplate = (name) => {
   return template.content.cloneNode(true);
 }
 
+
+
+
 class PerformanceReport {
   constructor(dataStructure) {
     this.tasks = [];
@@ -83,16 +92,14 @@ class PerformanceReport {
     this.element = this.buildElement(title);
     this.worker = this.initializeWorker();
 
-    const taskId = this.tasks.length;
-    this.worker.postMessage({
-      type: MESSAGE_TYPES.NEW_TASK,
-      payload: {
-        type: TASK_TYPES.INITIALIZE,
-        id: taskId,
-        dictionarySize: 10000,
-        dataStructure: 'wordList',
-      }
-    })
+    console.log(this.worker);
+
+    this.launchTask({
+      title: 'load 10k words',
+      type: TASK_TYPES.INITIALIZE,
+      dictionarySize: 10000,
+      dataStructure: 'wordList',
+    });
   }
 
   buildElement(title) {
@@ -104,46 +111,164 @@ class PerformanceReport {
     const reportList = document.querySelector('.performance--report-list');
     reportList.appendChild(report);
 
+    console.log(element);
+
     return element;
   }
 
   initializeWorker() {
+    console.log("initializing worker");
     const worker = new Worker('./perfrunner.worker.js', { type: 'module' });
-    worker.addEventListener('message', (message) => {
-      console.log('host received message');
-      console.log(message.data);
+
+    worker.addEventListener('message', (event) => {
+      const message = event.data;
+      console.log('host got message from worker:');
+      console.log(message);
+      switch (message.type) {
+        case MESSAGE_TYPES.TASK_UPDATE:
+          this.updateTask(message.payload.id, message.payload);
+          break;
+
+        case MESSAGE_TYPES.TASK_COMPLETE:
+          this.completeTask(message.payload.id, message.payload);
+          break;
+
+        default:
+          console.log('host received unknown message from worker');
+          console.log(message);
+      }
     });
 
     return worker;
   }
 
-  // startRun() {
-  //   console.log(worker);
+  launchTask(task) {
+    console.log('launching task')
+    const taskId = this.tasks.length;
+    task.id = taskId;
 
-    
+    this.tasks.push(task);
 
-  //   console.log('host posting start');
-  //   worker.postMessage('start');
-  //   console.log('host posted start');
+    this.worker.postMessage({
+      type: MESSAGE_TYPES.NEW_TASK,
+      payload: task,
+    });
 
-  //   console.log('host posting finish');
-  //   worker.postMessage('finish');
-  //   console.log('host posted finish');
+    task.component = new TaskComponent({
+      title: task.title,
+      stopTask: () => this.stopTask(task.id),
+    });
+    this.element.querySelector('.performance-report--run-list').appendChild(task.component.element);
 
-  //   // worker.terminate();
-  // }
+  }
+
+  stopTask(id) {
+    console.log(`stoping task ${id}`);
+
+    this.worker.postMessage({
+      type: MESSAGE_TYPES.STOP_TASK,
+      payload: {
+        id: id,
+      },
+    });
+  }
+
+  updateTask(id, data) {
+    console.log(`updating task ${id}`);
+    const task = this.tasks.find(t => t.id === id);
+
+    task.component.update(data);
+  }
+
+  completeTask(id, data) {
+    console.log(`task ${id} complete`);
+
+    const task = this.tasks.find(t => t.id === id);
+
+    task.component.complete(data);
+  }
+
 }
 
-class PerformanceRun {
+class TaskComponent {
+  constructor({ title, stopTask }) {
+    const template = loadTemplate('performance-task');
 
+    this.element = template.firstElementChild;
+    this.element.addEventListener('click', stopTask);
+
+    this.getField('title').textContent = title;
+
+    this.update({ percentComplete: 0, runTimeMs: 0 });
+  }
+
+  getField(name, element) {
+    element = element || this.element;
+    const selector = `.performance-task--${name}`;
+    return element.querySelector(selector);
+  }
+
+  update(stats) {
+    this.getField('progress-bar').style.width = `${stats.percentComplete}%`;
+
+    const results = this.getField('results');
+    while (results.firstChild) {
+      results.removeChild(results.firstChild);
+    }
+
+    const formatted = this.formatStats(stats);
+
+    Object.keys(formatted).forEach(field => {
+      const resultItem = loadTemplate('performance-task--result-item');
+      resultItem.firstElementChild.textContent = `${field}: ${formatted[field]}`;
+      results.appendChild(resultItem);
+    });
+  }
+
+  complete(stats) {
+    this.update(stats);
+
+    this.getField('stop-button').setAttribute('disabled', 'true');
+  }
+
+  formatStats(stats) {
+    const formatted = {};
+
+    Object.keys(stats).forEach(field => {
+      const value = stats[field];
+      switch (field) {
+        case 'id':
+          break;
+
+        case 'percentComplete':
+          formatted['progress'] = `${value}%`;
+          break;
+
+        case 'runTimeMs':
+          formatted['time'] = `${value.toLocaleString()} ms`;
+          break;
+
+        case 'totalTimeMs':
+          if (stats.runTimeMs) {
+            const overhead = value - stats.runTimeMs;
+            formatted['system overhead'] = `${overhead.toLocaleString()} ms`;
+          } else {
+            formatted[field] = value;
+          }
+          break;
+
+        case 'size':
+          formatted['size'] = prettyBytes(value);
+          break;
+
+        default:
+          formatted[field] = value;
+      }
+    });
+
+    return formatted;
+  }
 }
-
-const buildPerformanceReport = (DataStructure) => {
-
-
-
-}
-
 
 
 

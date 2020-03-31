@@ -46,15 +46,20 @@
     </li>
   </template>
 
-  <template class="template--performance-run">
-    <li class="performance-run">
-      <label class="performance-run--title"></label>
-      <div class="performance-run--progress-bar-container">
-        <div class="performance-run--progress-bar-completed">
+  <template class="template--performance-task">
+    <li class="performance-task">
+      <button class="performance-task--stop-button">X</button>
+      <label class="performance-task--title"></label>
+      <div class="performance-task--progress-bar-container">
+        <div class="performance-task--progress-bar">
         </div>
       </div>
-      <button class="performance-run--stop-button">X</button>
+      <ul class="performance-task--results"></ul>
     </li>
+  </template>
+
+  <template class="template--performance-task--result-item">
+    <li class="performance-task--result-item"></li>
   </template>
 </body>
 

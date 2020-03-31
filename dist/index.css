@@ -1,3 +1,8 @@
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
 .main {
   width: 12rem;
 }
@@ -47,4 +52,42 @@
 .keyboard-button--subtext {
   text-align: center;
   color: darkgrey;
+}
+
+.performance-report {
+  border: 1px solid black;
+}
+
+.performance-task {
+  width: 90%;
+  margin: .5rem auto;
+}
+
+.performance-task:not(:first-child) {
+  border-top: 1px solid black;
+}
+
+.performance-task--stop-button {
+  height: 1rem;
+  width: 1.5rem;
+  padding: 0;
+  background-color: #E7175F;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.performance-task--stop-button[disabled] {
+  background-color: #dddddd;
+}
+
+.performance-task--progress-bar-container {
+  height: 1rem;
+
+  background-color: #dddddd;
+  border: 1px solid black;
+}
+
+.performance-task--progress-bar {
+  background-color: #0AA3C2;
+  height: 100%;
 }

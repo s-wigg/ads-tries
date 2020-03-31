@@ -8,8 +8,11 @@ import words100KRaw from '../100000-words.txt';
 import { executionTimeMs } from './performance';
 import sizeof from "object-sizeof";
 
+console.log('inside the perfrunner file');
+
 class PerfRunner {
   constructor() {
+    console.log('constructing worker');
     this.tasks = [];
     // {
     //   id: number,
