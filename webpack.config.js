@@ -1,12 +1,14 @@
 const path = require('path');
+const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
   entry: './src/index.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  devtool: 'eval-source-map',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     watchContentBase: true,
@@ -16,9 +18,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader"
+      },
+      {
         test: /\.txt$/i,
         use: 'raw-loader',
       },
     ],
   },
+  plugins: [
+    new WorkerPlugin(),
+  ],
 };

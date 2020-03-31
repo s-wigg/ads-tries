@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="index.css">
   <script src="./main.js"></script>
 </head>
+
 <body>
   <h1>T9 Keyboard</h1>
 
@@ -15,20 +17,45 @@
     <div class="display">
       <label for="display--numbers">Keys</label>
       <input name="display--numbers" class="display--input display--numbers" readonly="true">
-  
+
       <label for="display--words">Words</label>
       <input name="display--words" class="display--input display--words" readonly="true">
     </div>
-    <div class="keyboard">
-  
-    </div>
+
+    <div class="keyboard"></div>
+
+    <section class="performance">
+      <h2>Performance Tests</h2>
+      <label for="performance--timeout">Timeout (secs)</label>
+      <input name="performance--timeout">
+      <ul class="performance--report-list"></ul>
+    </section>
   </main>
-  
+
   <template class="template--keyboard-button">
     <div class="keyboard-button">
       <div class="keyboard-button--number"></div>
       <div class="keyboard-button--subtext"></div>
     </div>
   </template>
+
+  <template class="template--performance-report">
+    <li class="performance-report">
+      <h3 class="performance-report--title">test</h3>
+      <ul class="performance-report--run-list"></ul>
+    </li>
+  </template>
+
+  <template class="template--performance-run">
+    <li class="performance-run">
+      <label class="performance-run--title"></label>
+      <div class="performance-run--progress-bar-container">
+        <div class="performance-run--progress-bar-completed">
+        </div>
+      </div>
+      <button class="performance-run--stop-button">X</button>
+    </li>
+  </template>
 </body>
+
 </html>

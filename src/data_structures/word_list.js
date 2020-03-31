@@ -33,12 +33,21 @@ const buildCode = (word) => {
 }
 
 class WordList {
-  constructor(words) {
+  constructor(words = []) {
+    // TODO: should the DS be responsible for building codes? Maybe inject the map function as an argument.
     this.words = words.map(word => {
       return {
         text: word,
         code: buildCode(word),
       }
+    });
+  }
+
+  // Build incrementally
+  addWord(word) {
+    this.words.push({
+      text: word,
+      code: buildCode(word),
     });
   }
 

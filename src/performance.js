@@ -7,7 +7,7 @@ import words100KRaw from '../100000-words.txt';
 const words10K = words10KRaw.split('\n');
 const words100K = words100KRaw.split('\n');
 
-const executionTimeMs = (callback) => {
+export const executionTimeMs = (callback) => {
   const t0 = performance.now();
   callback();
   const t1 = performance.now();
