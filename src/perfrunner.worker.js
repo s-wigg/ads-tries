@@ -29,11 +29,11 @@ class PerfRunner {
     switch (message.type) {
       case MESSAGE_TYPES.NEW_TASK: {
         this.tasks.push(message.payload);
-        setTimeout(this.processTask, 0, message.payload);
+        setTimeout(this.initializeTask, 0, message.payload);
         break;
       }
       case MESSAGE_TYPES.STOP_TASK: {
-        const task = this.tasks.find(task => task.id === payload.id);
+        const task = this.tasks.find(task => task.id === message.payload.id);
         if (task) {
           task.cancelled = true;
         }
@@ -45,20 +45,21 @@ class PerfRunner {
     }
   }
 
-  processTask = (task) => {
+  initializeTask = (task) => {
     // Do some setup
     task.cancelled = false;
     task.finished = false;
     task.startTime = performance.now();
     task.runTimeMs = 0;
+    task.buildCompletionPayload = () => undefined;
 
     switch (task.type) {
       case TASK_TYPES.INITIALIZE:
-        this.initializeDataStructure(task);
+        this.loadDataStructure(task);
     }
   }
 
-  initializeDataStructure(task) {
+  loadDataStructure(task) {
     const DataStructure = dataStructureList[task.dataStructure];
     if (!DataStructure) {
       throw new Error(`Perf test worker asked to load unknown data structure ${task.dataStructure}`);
@@ -74,17 +75,22 @@ class PerfRunner {
 
     task.wordsLoaded = 0;
 
-    setTimeout(this.loadWords, 0, task);
+    task.doWork = (task, i) => this.ds.addWord(task.dictionary[i]);
+    task.buildCompletionPayload = () => ({ size: sizeof(this.ds) });
+    setTimeout(this.processTask, 0, task);
   }
 
-  loadWords = (task) => {
+  profilePerformance(task) {
+
+  }
+
+  processTask = (task) => {
     if (task.cancelled) {
       console.log(`Bailing early from cancelled task ${task.id}`);
       task.finished = true;
       return;
     }
 
-    
     const wordsRemaining = task.dictionary.length - task.wordsLoaded;
     const wordsToLoad = Math.min(WORK_INCREMENT, wordsRemaining);
 
@@ -92,7 +98,8 @@ class PerfRunner {
       for (let i = task.wordsLoaded;
         i < task.wordsLoaded + wordsToLoad;
         i += 1) {
-        this.ds.addWord(task.dictionary[i]);
+        task.doWork(task, i);
+
       }
     });
 
@@ -111,21 +118,22 @@ class PerfRunner {
 
     if (task.wordsLoaded < task.dictionary.length) {
       // Not finished yet, queue up more work
-      setTimeout(this.loadWords, 0, task);
+      setTimeout(this.processTask, 0, task);
 
     } else {
       postMessage({
         type: MESSAGE_TYPES.TASK_COMPLETE,
         payload: {
           id: task.id,
-          size: sizeof(this.ds),
           runTimeMs: task.runTimeMs,
           totalTimeMs: performance.now() - task.startTime,
+          ...task.buildCompletionPayload(),
         }
       });
       task.finished = true;
     }
   }
+
 }
 
 new PerfRunner();
