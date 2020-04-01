@@ -40,7 +40,7 @@ class PerfRunner {
         break;
       }
       default: {
-        console.log(`Perf test worker received bogus message type ${message.type}`);
+        console.log(`Perf worker received bogus message type ${message.type}`);
       }
     }
   }
@@ -51,11 +51,21 @@ class PerfRunner {
     task.finished = false;
     task.startTime = performance.now();
     task.runTimeMs = 0;
+    task.completedIterations = 0;
     task.buildCompletionPayload = () => undefined;
 
     switch (task.type) {
       case TASK_TYPES.INITIALIZE:
         this.loadDataStructure(task);
+        break;
+
+      case TASK_TYPES.PROFILE:
+        this.profilePerformance(task);
+        break;
+
+      default:
+        console.log(`Perf worker asked to start unknown task type ${task.type}`);
+        break;
     }
   }
 
@@ -73,7 +83,7 @@ class PerfRunner {
       task.dictionary = words100KRaw.split('\n');
     }
 
-    task.wordsLoaded = 0;
+    task.totalIterations = task.dictionary.length;
 
     task.doWork = (task, i) => this.ds.addWord(task.dictionary[i]);
     task.buildCompletionPayload = () => ({ size: sizeof(this.ds) });
@@ -91,21 +101,20 @@ class PerfRunner {
       return;
     }
 
-    const wordsRemaining = task.dictionary.length - task.wordsLoaded;
-    const wordsToLoad = Math.min(WORK_INCREMENT, wordsRemaining);
+    const remainingIterations = task.totalIterations - task.completedIterations;
+    const scheduledIterations = Math.min(WORK_INCREMENT, remainingIterations);
 
     const runTimeMs = executionTimeMs(() => {
-      for (let i = task.wordsLoaded;
-        i < task.wordsLoaded + wordsToLoad;
+      for (let i = task.completedIterations;
+        i < task.completedIterations + scheduledIterations;
         i += 1) {
         task.doWork(task, i);
-
       }
     });
 
     task.runTimeMs += runTimeMs;
-    task.wordsLoaded += wordsToLoad;
-    const percentComplete = Math.round(100.0 * task.wordsLoaded / task.dictionary.length);
+    task.completedIterations += scheduledIterations;
+    const percentComplete = Math.round(100.0 * task.completedIterations / task.totalIterations);
 
     postMessage({
       type: MESSAGE_TYPES.TASK_UPDATE,
@@ -116,7 +125,7 @@ class PerfRunner {
       },
     });
 
-    if (task.wordsLoaded < task.dictionary.length) {
+    if (task.completedIterations < task.totalIterations) {
       // Not finished yet, queue up more work
       setTimeout(this.processTask, 0, task);
 
@@ -125,6 +134,7 @@ class PerfRunner {
         type: MESSAGE_TYPES.TASK_COMPLETE,
         payload: {
           id: task.id,
+          percentComplete: 100,
           runTimeMs: task.runTimeMs,
           totalTimeMs: performance.now() - task.startTime,
           ...task.buildCompletionPayload(),
