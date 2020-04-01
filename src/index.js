@@ -6,13 +6,14 @@ import WordList from './data_structures/word_list';
 import PerformanceReport from './components/PerformanceReport';
 import Keyboard from './components/Keyboard';
 import Display from './components/Display';
+import dataStructureList from './data_structures/data_structure_list';
 
 document.addEventListener("DOMContentLoaded", () => {
   const keyboardElement = document.querySelector('.keyboard');
   const keyboard = new Keyboard(keyboardElement);
   const display = new Display(keyboard.keyPressObservable, new WordList(words10K));
   
-  // console.log(profile(WordList));
-  const perfReport = new PerformanceReport(WordList);
-  // perfReport.startRun();
+  Object.keys(dataStructureList).forEach(dataStructure => {
+    new PerformanceReport(dataStructure);
+  });
 });
