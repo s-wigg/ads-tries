@@ -7,8 +7,9 @@ import words100KRaw from '../100000-words.txt';
 
 import { executionTimeMs } from './performance';
 import sizeof from "object-sizeof";
+import seedrandom from 'seedrandom';
 
-const WORK_INCREMENT = 1024;
+const WORK_INCREMENT = 256;
 
 class PerfRunner {
   constructor() {
@@ -91,7 +92,20 @@ class PerfRunner {
   }
 
   profilePerformance(task) {
+    const rng = seedrandom('ada developers academy');
+    task.totalIterations = task.lookupCount;
+    task.doWork = () => {
+      // lookup prefixes between 1 and 6 characters
+      const length = Math.floor(rng() * 6) + 1;
 
+      let prefix = "";
+      for (let j = 0; j < length; j += 1) {
+        prefix += Math.floor(rng() * 8) + 2;
+      }
+
+      this.ds.lookupPrefix(prefix);
+    }
+    setTimeout(this.processTask, 0, task);
   }
 
   processTask = (task) => {

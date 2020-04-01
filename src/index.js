@@ -7,6 +7,7 @@ import Display from './components/Display';
 document.addEventListener("DOMContentLoaded", () => {
   const keyboardElement = document.querySelector('.keyboard');
   const keyboard = new Keyboard(keyboardElement);
+
   const display = new Display(keyboard.keyPressObservable);
   
   // console.log(profile(WordList));

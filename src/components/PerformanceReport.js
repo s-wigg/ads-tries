@@ -22,11 +22,22 @@ class PerformanceReport {
     });
   }
 
+  getField(name, element) {
+    element = element || this.element;
+    const selector = `.performance-report--${name}`;
+    return element.querySelector(selector);
+  }
+
   buildElement(title) {
     const report = loadTemplate('performance-report');
     const element = report.firstElementChild;
 
-    report.querySelector('.performance-report--title').textContent = title;
+    this.getField('title', element).textContent = title;
+    this.getField('run-button', element).addEventListener('click', () => {
+      console.log('click');
+      const lookupCount = this.getField('lookup-count', element).value;
+      this.profilePerformance(lookupCount);
+    });
 
     const reportList = document.querySelector('.performance--report-list');
     reportList.appendChild(report);
@@ -58,6 +69,15 @@ class PerformanceReport {
     });
 
     return worker;
+  }
+
+  profilePerformance(lookupCount) {
+    console.log('Profiling performance');
+    this.launchTask({
+      title: `${lookupCount.toLocaleString()} lookups`,
+      type: TASK_TYPES.PROFILE,
+      lookupCount,
+    });
   }
 
   launchTask(task) {
