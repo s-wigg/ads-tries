@@ -14,6 +14,7 @@ const WORK_INCREMENT = 256;
 class PerfRunner {
   constructor() {
     this.tasks = [];
+    this.taskInProgress = false;
     // {
     //   id: number,
     //   cancelled: boolean,
@@ -29,8 +30,7 @@ class PerfRunner {
 
     switch (message.type) {
       case MESSAGE_TYPES.NEW_TASK: {
-        this.tasks.push(message.payload);
-        setTimeout(this.initializeTask, 0, message.payload);
+        this.initializeTask(message.payload);
         break;
       }
       case MESSAGE_TYPES.STOP_TASK: {
@@ -43,30 +43,6 @@ class PerfRunner {
       default: {
         console.log(`Perf worker received bogus message type ${message.type}`);
       }
-    }
-  }
-
-  initializeTask = (task) => {
-    // Do some setup
-    task.cancelled = false;
-    task.finished = false;
-    task.startTime = performance.now();
-    task.runTimeMs = 0;
-    task.completedIterations = 0;
-    task.buildCompletionPayload = () => undefined;
-
-    switch (task.type) {
-      case TASK_TYPES.INITIALIZE:
-        this.loadDataStructure(task);
-        break;
-
-      case TASK_TYPES.PROFILE:
-        this.profilePerformance(task);
-        break;
-
-      default:
-        console.log(`Perf worker asked to start unknown task type ${task.type}`);
-        break;
     }
   }
 
@@ -108,10 +84,66 @@ class PerfRunner {
     setTimeout(this.processTask, 0, task);
   }
 
+  initializeTask = (task) => {
+    // Do some setup
+    task.cancelled = false;
+    task.finished = false;
+    task.runTimeMs = 0;
+    task.completedIterations = 0;
+    task.buildCompletionPayload = () => undefined;
+
+    switch (task.type) {
+      case TASK_TYPES.INITIALIZE:
+        task.startFunction = this.loadDataStructure.bind(this);
+        break;
+
+      case TASK_TYPES.PROFILE:
+        task.startFunction = this.profilePerformance.bind(this);
+        break;
+
+      default:
+        console.log(`Perf worker asked to start unknown task type ${task.type}`);
+        break;
+    }
+
+    postMessage({
+      type: MESSAGE_TYPES.TASK_UPDATE,
+      payload: {
+        id: task.id,
+        status: 'queued',
+      },
+    });
+
+    this.tasks.push(task);
+    this.beginTask();
+  }
+
+  beginTask() {
+    if (this.taskInProgress) {
+      console.debug(`not beginning task of type ${task.type} because another task is in progress`);
+      // Only one task at a time!
+      return;
+    }
+
+    const task = this.tasks.find(task => !task.finished);
+    if (task) {
+      console.debug(`starting task of type ${task.type}`);
+      task.startTime = performance.now();
+      task.startFunction(task);
+    } else {
+      console.debug('exhausted task queue');
+    }
+
+  }
+
   processTask = (task) => {
     if (task.cancelled) {
-      console.log(`Bailing early from cancelled task ${task.id}`);
-      task.finished = true;
+      console.debug(`Bailing early from cancelled task ${task.id}`);
+      this.finishTask(task, 'stopped', {
+        percentComplete: Math.round(100.0 * task.completedIterations / task.totalIterations),
+        runTimeMs: task.runTimeMs,
+        totalTimeMs: performance.now() - task.startTime,
+      });
       return;
     }
 
@@ -134,6 +166,7 @@ class PerfRunner {
       type: MESSAGE_TYPES.TASK_UPDATE,
       payload: {
         id: task.id,
+        status: 'running',
         percentComplete: percentComplete,
         runTimeMs: task.runTimeMs,
       },
@@ -144,20 +177,28 @@ class PerfRunner {
       setTimeout(this.processTask, 0, task);
 
     } else {
-      postMessage({
-        type: MESSAGE_TYPES.TASK_COMPLETE,
-        payload: {
-          id: task.id,
-          percentComplete: 100,
-          runTimeMs: task.runTimeMs,
-          totalTimeMs: performance.now() - task.startTime,
-          ...task.buildCompletionPayload(),
-        }
+      this.finishTask(task, 'finished', {
+        percentComplete: 100,
+        runTimeMs: task.runTimeMs,
+        totalTimeMs: performance.now() - task.startTime,
+        ...task.buildCompletionPayload(),
       });
-      task.finished = true;
     }
   }
 
+  finishTask(task, status, payload) {
+    postMessage({
+      type: MESSAGE_TYPES.TASK_COMPLETE,
+      payload: {
+        id: task.id,
+        status,
+        ...payload,
+      }
+    });
+    task.finished = true;
+    this.taskInProgress = false;
+    this.beginTask();
+  }
 }
 
 new PerfRunner();
