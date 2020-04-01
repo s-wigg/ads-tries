@@ -71,6 +71,11 @@ ul {
   padding: 0.5rem;
 }
 
+.performance-report--controls {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
 .performance-task {
   width: 95%;
   margin: 1rem auto;

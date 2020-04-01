@@ -30,6 +30,7 @@
       <h2>Performance Tests</h2>
       <label for="performance--timeout">Timeout (seconds)</label>
       <input name="performance--timeout" value="30">
+      <p>Note: you may want to run a few short tests first to allow the JIT to warm up</p>
       <ul class="performance--report-list"></ul>
     </section>
   </main>
@@ -44,9 +45,18 @@
   <template class="template--performance-report">
     <li class="performance-report">
       <h3 class="performance-report--title">test</h3>
-      <label for="lookup-count">Lookup Count</label>
-      <input name="lookup-count" class="performance-report--lookup-count" value="1000">
-      <button class="performance-report--run-button">Run</button>
+      <div class="performance-report--controls">
+        <label for="dictionary-size">Dictionary</label>
+        <select name="dictionary-size" class="performance-report--dictionary-size" value="small">
+          <option value="small">Small (~10k)</option>
+          <option value="large">Large (~450k)</option>
+        </select>
+        <button class="performance-report--load-dictionary-button">Load</button>
+
+        <label for="lookup-count">Lookup Count</label>
+        <input name="lookup-count" class="performance-report--lookup-count" value="1000">
+        <button class="performance-report--run-button">Run</button>
+      </div>
       <ul class="performance-report--run-list"></ul>
     </li>
   </template>
