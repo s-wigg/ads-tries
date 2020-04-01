@@ -1,13 +1,4 @@
-
-
-
-
-import words10KRaw from '../10000-words.txt';
-const words10K = words10KRaw.split('\n');
-
-
 import WordList from './data_structures/word_list';
-import profile from './performance';
 
 import PerformanceReport from './components/PerformanceReport';
 import Keyboard from './components/Keyboard';
