@@ -1,53 +1,25 @@
-// TODO include this in a utility library
-const numbersByLetter = {
-  a: 2,
-  b: 2,
-  c: 2,
-  d: 3,
-  e: 3,
-  f: 3,
-  g: 4,
-  h: 4,
-  i: 4,
-  j: 5,
-  k: 5,
-  l: 5,
-  m: 6,
-  n: 6,
-  o: 6,
-  p: 7,
-  q: 7,
-  r: 7,
-  s: 7,
-  t: 8,
-  u: 8,
-  v: 8,
-  w: 9,
-  x: 9,
-  y: 9,
-  z: 9,
-};
-
-const buildCode = (word) => {
-  return word.split('').map(l => numbersByLetter[l]).join('');
-}
-
 class WordList {
-  constructor(words = []) {
-    // TODO: should the DS be responsible for building codes? Maybe inject the map function as an argument.
-    this.words = words.map(word => {
+  constructor(words = [], buildCode) {
+    this.buildCode = buildCode;
+
+    const uniqueWords = words.filter((v, i, a) => a.indexOf(v) === i);
+    this.words = uniqueWords.map(word => {
       return {
         text: word,
-        code: buildCode(word),
+        code: this.buildCode(word),
       }
     });
   }
 
   // Build incrementally
   addWord(word) {
+    if (this.words.find(w => w.text === word)) {
+      return;
+    }
+
     this.words.push({
       text: word,
-      code: buildCode(word),
+      code: this.buildCode(word),
     });
   }
 
@@ -56,6 +28,10 @@ class WordList {
     return this.words
       .filter(word => word.code.startsWith(prefix))
       .map(word => word.text);
+  }
+
+  count() {
+    return this.words.length;
   }
 }
 

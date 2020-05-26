@@ -25,6 +25,15 @@ $ npm test
 
 Runs jest in watch mode
 
+## Assignment
+
+### Core
+
+
+### Optional
+
+1. Currently, lookupPrefix returns an array. Modify it to return a generator function instead.
+
 ## Reference
 
 - [10K words comes from Google](https://github.com/first20hours/google-10000-english)
