@@ -11,8 +11,6 @@ class PerformanceReport {
     this.element = this.buildElement(title);
     this.worker = this.initializeWorker();
 
-    console.log(this.worker);
-
     this.launchTask({
       title: 'load 10k words',
       type: TASK_TYPES.INITIALIZE,
@@ -21,22 +19,30 @@ class PerformanceReport {
     });
   }
 
+  getField(name, element) {
+    element = element || this.element;
+    const selector = `.performance-report--${name}`;
+    return element.querySelector(selector);
+  }
+
   buildElement(title) {
     const report = loadTemplate('performance-report');
     const element = report.firstElementChild;
 
-    report.querySelector('.performance-report--title').textContent = title;
+    this.getField('title', element).textContent = title;
+    this.getField('run-button', element).addEventListener('click', () => {
+      const lookupCount = this.getField('lookup-count', element).value;
+      this.profilePerformance(lookupCount);
+    });
 
     const reportList = document.querySelector('.performance--report-list');
     reportList.appendChild(report);
 
-    console.log(element);
 
     return element;
   }
 
   initializeWorker() {
-    console.log("initializing worker");
     const worker = new Worker('../perfrunner.worker.js', { type: 'module' });
 
     worker.addEventListener('message', (event) => {
@@ -59,8 +65,15 @@ class PerformanceReport {
     return worker;
   }
 
+  profilePerformance(lookupCount) {
+    this.launchTask({
+      title: `${lookupCount.toLocaleString()} lookups`,
+      type: TASK_TYPES.PROFILE,
+      lookupCount,
+    });
+  }
+
   launchTask(task) {
-    console.log('launching task')
     const taskId = this.tasks.length;
     task.id = taskId;
 
@@ -75,7 +88,8 @@ class PerformanceReport {
       title: task.title,
       stopTask: () => this.stopTask(task.id),
     });
-    this.element.querySelector('.performance-report--run-list').appendChild(task.component.element);
+    const runList = this.getField('run-list');
+    runList.insertBefore(task.component.element, runList.firstChild);
 
   }
 
@@ -97,8 +111,6 @@ class PerformanceReport {
   }
 
   completeTask(id, data) {
-    console.log(`task ${id} complete`);
-
     const task = this.tasks.find(t => t.id === id);
 
     task.component.complete(data);

@@ -10,4 +10,5 @@ export const MESSAGE_TYPES = {
 
 export const TASK_TYPES = {
   INITIALIZE: 'INITIALIZE',
+  PROFILE: 'PROFILE',
 }
