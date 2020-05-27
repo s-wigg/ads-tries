@@ -27,8 +27,9 @@ const numbersByLetter = {
   z: 9,
 };
 
-export const buildCode = (word) => {
+export const t9KeyCode = (word) => {
   return word.toLowerCase().split('')
     .map(l => numbersByLetter[l])
-    .filter(l => l != null);
+    .filter(l => l != null)
+    .join('');
 };

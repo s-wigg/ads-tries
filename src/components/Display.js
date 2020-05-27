@@ -18,6 +18,7 @@ class Display {
   
     const wordsDisplay = document.querySelector('.display--words');
     keyCodeStream.subscribe(value => {
+      console.log(value);
       const possibleWords = this.dataStructure.lookupPrefix(value);
       wordsDisplay.value = possibleWords.slice(0, 5).join(', ');
     });

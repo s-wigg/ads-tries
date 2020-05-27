@@ -1,48 +1,48 @@
-import { buildCode } from './t9';
+import { t9KeyCode } from './t9';
 
-describe(buildCode, () => {
+describe(t9KeyCode, () => {
   it('returns an array containing the code', () => {
-    expect(buildCode('ada')).toStrictEqual([2, 3, 2]);
+    expect(t9KeyCode('ada')).toStrictEqual('232');
   });
 
   it('returns the correct code for many different words', () => {
     const codes = {
-      ada: [2, 3, 2],
-      developers: [3, 3, 8, 3, 5, 6, 7, 3, 7, 7],
-      academy: [2, 2, 2, 3, 3, 6, 9],
-      advanced: [2, 3, 8, 2, 6, 2, 3, 3],
-      data: [3, 2, 8, 2],
-      structures: [7, 8, 7, 8, 2, 8, 8, 7, 3, 7]
+      ada: '232',
+      developers: '3383567377',
+      academy: '2223369',
+      advanced: '23826233',
+      data: '3282',
+      structures: '7878288737'
     }
     Object.keys(codes).forEach(word => {
-      expect(buildCode(word)).toStrictEqual(codes[word]);
+      expect(t9KeyCode(word)).toStrictEqual(codes[word]);
     });
   });
 
   it('returns an empty array for an emtpy string', () => {
-    expect(buildCode('')).toStrictEqual([]);
+    expect(t9KeyCode('')).toStrictEqual('');
   });
 
   it('ignores non-letter characters', () => {
     const codes = {
-      '$%^&': [],
-      '.mixed-input_today!': buildCode('mixedinputtoday'),
-      ' white  space   ': buildCode('whitespace'),
-      '😃': []
+      '$%^&': '',
+      '.mixed-input_today!': t9KeyCode('mixedinputtoday'),
+      ' white  space   ': t9KeyCode('whitespace'),
+      '😃': ''
     };
     Object.keys(codes).forEach(word => {
-      expect(buildCode(word)).toStrictEqual(codes[word]);
+      expect(t9KeyCode(word)).toStrictEqual(codes[word]);
     });
   });
 
   it('accepts upper and lower case', () => {
     const codes = {
-      ada: [2, 3, 2],
-      ADA: [2, 3, 2],
-      aDa: [2, 3, 2],
+      ada: '232',
+      ADA: '232',
+      aDa: '232',
     };
     Object.keys(codes).forEach(word => {
-      expect(buildCode(word)).toStrictEqual(codes[word]);
+      expect(t9KeyCode(word)).toStrictEqual(codes[word]);
     });
   });
 });

@@ -12,11 +12,12 @@ import profile from './performance';
 import PerformanceReport from './components/PerformanceReport';
 import Keyboard from './components/Keyboard';
 import Display from './components/Display';
+import { t9KeyCode } from './t9';
 
 document.addEventListener("DOMContentLoaded", () => {
   const keyboardElement = document.querySelector('.keyboard');
   const keyboard = new Keyboard(keyboardElement);
-  const display = new Display(keyboard.keyPressObservable);
+  const display = new Display(keyboard.keyPressObservable, new WordList(words10K, t9KeyCode));
   
   // console.log(profile(WordList));
   const perfReport = new PerformanceReport(WordList);
