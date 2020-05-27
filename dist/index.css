@@ -61,14 +61,23 @@ ul {
 }
 
 .performance {
-  min-width: 12rem;
-  max-width: 25rem;
+  
+  /* max-width: 25rem; */
   margin: 0 1rem;
+}
+
+.performance--report-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .performance-report {
   border: 1px solid black;
   padding: 0.5rem;
+  min-width: 12rem;
+  margin: 0.5rem;
 }
 
 .performance-report--controls {
