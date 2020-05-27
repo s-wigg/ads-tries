@@ -1,55 +1,10 @@
-class TrieNode {
-  constructor() {
-    this.words = [];
-    this.children = {};
-  }
-
-  insert(word, code, index = 0) {
-    if (index === code.length) {
-      if (this.words.includes(word)) {
-        return false;
-      }
-
-      this.words.push(word);
-      return true;
-    }
-
-    const letter = code[index];
-    let child = this.children[letter];
-    if (!child) {
-      child = new TrieNode();
-      this.children[letter] = child;
-    }
-    return child.insert(word, code, index + 1);
-  }
-
-  lookup(code, index = 0) {
-    if (index === code.length) {
-      return this;
-    }
-
-    const letter = code[index];
-    let child = this.children[letter];
-    if (child) {
-      return child.lookup(code, index + 1);
-    } else {
-      return null;
-    }
-  }
-
-  gatherWords(words = []) {
-    words.push(...this.words);
-    Object.values(this.children).forEach(child => {
-      child.gatherWords(words);
-    });
-    return words;
-  }
-}
+import TrieNode from './trie_node';
 
 class Trie {
-  constructor(words, buildCode) {
+  constructor(words, buildCode, Node=TrieNode) {
+    this.Node = Node;
     this.buildCode = buildCode;
-    this._root = new TrieNode();
+    this._root = new this.Node();
     this._count = 0;
     words.forEach(word => this.addWord(word));
   }
