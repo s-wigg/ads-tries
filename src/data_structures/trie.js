@@ -31,8 +31,18 @@ class TrieNode {
     const letter = code[index];
     let child = this.children[letter];
     if (child) {
-      return child.lookup(code, index - 1);
+      return child.lookup(code, index + 1);
+    } else {
+      return null;
     }
+  }
+
+  gatherWords(words = []) {
+    words.push(...this.words);
+    Object.values(this.children).forEach(child => {
+      child.gatherWords(words);
+    });
+    return words;
   }
 }
 
@@ -45,7 +55,7 @@ class Trie {
   }
 
   addWord(word) {
-    const code = this.buildCode(word);
+    const code = this.buildCode(word).split('');
     // code is an array, like [2, 3, 2]
 
     if (this._root.insert(word, code)) {
@@ -53,12 +63,19 @@ class Trie {
     }
   }
 
-  contains(code) {
-    return !!this._root.lookup(code);
+  lookupCode(code) {
+    code = code.split('');
+    const node = this._root.lookup(code);
+    if (node) {
+      return node.words;
+    } else {
+      return [];
+    }
   }
 
   lookupPrefix(codePrefix) {
-    const node = this._root.lookup(code);
+    codePrefix = codePrefix.split('');
+    const node = this._root.lookup(codePrefix);
     if (node) {
       return node.gatherWords();
     } else {

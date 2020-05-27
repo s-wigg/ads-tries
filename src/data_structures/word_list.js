@@ -23,6 +23,12 @@ class WordList {
     });
   }
 
+  lookupCode(code) {
+    return this.words
+      .filter(word => word.code === code)
+      .map(word => word.text);
+  }
+
   // prefix should be an string of numbers
   lookupPrefix(prefix) {
     return this.words
