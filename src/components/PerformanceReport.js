@@ -2,13 +2,12 @@ import Task from './Task';
 
 import { loadTemplate } from './util';
 import { MESSAGE_TYPES, TASK_TYPES } from '../messages';
-import dataStructureList from '../data_structures/data_structure_list';
 
 class PerformanceReport {
   constructor(dataStructure) {
     this.tasks = [];
 
-    const title = dataStructureList.wordList.name;
+    const title = dataStructure.name;
     this.element = this.buildElement(title);
     this.worker = this.initializeWorker();
 
@@ -18,7 +17,7 @@ class PerformanceReport {
       title: 'load 10k words',
       type: TASK_TYPES.INITIALIZE,
       dictionarySize: 10000,
-      dataStructure: 'wordList',
+      dataStructure: dataStructure.name,
     });
   }
 

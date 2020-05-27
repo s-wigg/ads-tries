@@ -7,6 +7,7 @@ import words100KRaw from '../100000-words.txt';
 
 import { executionTimeMs } from './performance';
 import sizeof from "object-sizeof";
+import { t9KeyCode } from "./t9";
 
 const WORK_INCREMENT = 1024;
 
@@ -64,7 +65,7 @@ class PerfRunner {
       throw new Error(`Perf test worker asked to load unknown data structure ${task.dataStructure}`);
     }
 
-    this.ds = new DataStructure();
+    this.ds = new DataStructure([], t9KeyCode);
 
     if (task.dictionarySize === 10000) {
       task.dictionary = words10KRaw.split('\n');

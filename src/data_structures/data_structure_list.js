@@ -1,10 +1,10 @@
 import WordList from './word_list';
 
 // TODO uncomment
-// import Trie from './trie';
+import Trie from './trie';
 
 export default {
-  wordList: WordList,
+  WordList: WordList,
   // TODO uncomment
-  // trie: Trie,
+  Trie: Trie,
 };
