@@ -6,17 +6,13 @@ import { MESSAGE_TYPES, TASK_TYPES } from '../messages';
 class PerformanceReport {
   constructor(dataStructureName) {
     this.tasks = [];
+    this.dsName = dataStructureName;
 
     const title = dataStructureName;
     this.element = this.buildElement(title);
     this.worker = this.initializeWorker();
 
-    this.launchTask({
-      title: 'load 10k words',
-      type: TASK_TYPES.INITIALIZE,
-      dictionarySize: 10000,
-      dataStructure: dataStructureName,
-    });
+    this.loadDictionary('small');
   }
 
   getField(name, element) {
@@ -34,6 +30,11 @@ class PerformanceReport {
       const lookupCount = this.getField('lookup-count', element).value;
       this.profilePerformance(lookupCount);
     });
+
+    this.getField('load-dictionary-button', element).addEventListener('click', () => {
+      const dictionarySize = this.getField('dictionary-size', element).value;
+      this.loadDictionary(dictionarySize);
+    })
 
     const reportList = document.querySelector('.performance--report-list');
     reportList.appendChild(report);
@@ -70,6 +71,15 @@ class PerformanceReport {
       title: `${lookupCount.toLocaleString()} lookups`,
       type: TASK_TYPES.PROFILE,
       lookupCount,
+    });
+  }
+
+  loadDictionary(size) {
+    this.launchTask({
+      title: `load ${size} dictionary`,
+      type: TASK_TYPES.INITIALIZE,
+      dictionarySize: size,
+      dataStructure: this.dsName,
     });
   }
 

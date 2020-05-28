@@ -55,9 +55,9 @@ class PerfRunner {
 
     this.ds = new DataStructure([], t9KeyCode);
 
-    if (task.dictionarySize === 10000) {
+    if (task.dictionarySize === 'small') {
       task.dictionary = words10KRaw.split('\n');
-    } else if (task.dictionarySize === 100000) {
+    } else if (task.dictionarySize === 'large') {
       task.dictionary = words100KRaw.split('\n');
     }
 
