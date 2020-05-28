@@ -1,11 +1,11 @@
 import WordList from "../word_list";
 import Trie from "../trie";
-// import CompressedTrie from "../compressed_trie";
+import CompressedTrie from "../compressed_trie";
 
 const dataStructures = [
-  WordList,
-  Trie,
-  // CompressedTrie,
+  // WordList,
+  // Trie,
+  CompressedTrie,
 ];
 
 const identity = (word) => word;
