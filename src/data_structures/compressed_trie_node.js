@@ -6,8 +6,7 @@ class CompressedTrieNode {
   }
 
   findMatchingChild(searchCode, index) {
-    for (let childCodeStr in this.children) {
-      const childCode = childCodeStr.split('');
+    for (let childCode in this.children) {
       let childCodeIndex = 0;
       let searchCodeIndex = index;
       while (childCodeIndex < childCode.length &&
@@ -18,7 +17,7 @@ class CompressedTrieNode {
       }
       if (childCodeIndex > 0) {
         // Found a match
-        return { childCode: childCodeStr, overlap: childCodeIndex };
+        return { childCode: childCode, overlap: childCodeIndex };
       }
     };
     return { childCode: null, overlap: 0 };
@@ -65,7 +64,7 @@ class CompressedTrieNode {
       // Create a new node, add it to our list using all remaining code letters
       child = new CompressedTrieNode();
 
-      const suffix = code.slice(index).join('');
+      const suffix = code.slice(index);
       this.children[suffix] = child;
 
       newIndex = code.length;

@@ -10,8 +10,7 @@ class Trie {
   }
 
   addWord(word) {
-    const code = this.buildCode(word).split('');
-    // code is an array, like [2, 3, 2]
+    const code = this.buildCode(word);
 
     if (this._root.insert(word, code)) {
       this._count += 1;
@@ -19,7 +18,6 @@ class Trie {
   }
 
   lookupCode(code) {
-    code = code.split('');
     const node = this._root.lookup(code);
     if (node) {
       return node.words;
@@ -29,7 +27,6 @@ class Trie {
   }
 
   lookupPrefix(codePrefix) {
-    codePrefix = codePrefix.split('');
     const node = this._root.lookup(codePrefix);
     if (node) {
       return node.gatherWords();

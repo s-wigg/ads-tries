@@ -142,6 +142,17 @@ dataStructures.forEach(PrefixDictionary => {
         expect(pd.lookupCode('ada')).toStrictEqual(['ada', 'ADA', 'AdA']);
       });
 
+      it('finds words added along an existing path', () => {
+        const pd = new PrefixDictionary(
+          ['adamant', 'developers', 'academy'],
+          identity
+        );
+
+        pd.addWord('ada');
+
+        expect(pd.lookupCode('ada')).toStrictEqual(['ada']);
+      });
+
       it('returns an empty array if no words match', () => {
         const pd = new PrefixDictionary(
           ['ada', 'developers', 'academy'],
@@ -201,6 +212,17 @@ dataStructures.forEach(PrefixDictionary => {
         pd.addWord('adamant');
 
         expect(pd.lookupPrefix('ada')).toStrictEqual(['ada', 'ADA', 'adamant']);
+      });
+
+      it('finds words added along an existing path', () => {
+        const pd = new PrefixDictionary(
+          ['adamant', 'developers', 'academy'],
+          identity
+        );
+
+        pd.addWord('ada');
+
+        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada', 'adamant']);
       });
 
       it('returns an empty array if no words match', () => {
