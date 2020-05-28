@@ -3,14 +3,18 @@ import Trie from "../trie";
 import CompressedTrie from "../compressed_trie";
 
 const dataStructures = [
-  // WordList,
-  // Trie,
+  WordList,
+  Trie,
   CompressedTrie,
 ];
 
 const identity = (word) => word;
 
 const lowerCase = (word) => word.toLowerCase();
+
+const verifyLookupResults = (received, expected) => {
+  expect(received.sort()).toStrictEqual(expected.sort());
+}
 
 dataStructures.forEach(PrefixDictionary => {
   describe(PrefixDictionary, () => {
@@ -118,7 +122,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupCode('ada')).toStrictEqual(['ada']);
+        verifyLookupResults(
+          pd.lookupCode('ada'),
+          ['ada']
+        );
       });
 
       it('finds all words matching the code', () => {
@@ -127,7 +134,10 @@ dataStructures.forEach(PrefixDictionary => {
           lowerCase
         );
 
-        expect(pd.lookupCode('ada')).toStrictEqual(['ada', 'ADA', 'AdA']);
+        verifyLookupResults(
+          pd.lookupCode('ada'),
+          ['ada', 'ADA', 'AdA']
+        );
       });
 
       it('finds words added after initialization', () => {
@@ -139,7 +149,10 @@ dataStructures.forEach(PrefixDictionary => {
         pd.addWord('ADA');
         pd.addWord('AdA');
 
-        expect(pd.lookupCode('ada')).toStrictEqual(['ada', 'ADA', 'AdA']);
+        verifyLookupResults(
+          pd.lookupCode('ada'),
+          ['ada', 'ADA', 'AdA']
+        );
       });
 
       it('finds words added along an existing path', () => {
@@ -150,7 +163,10 @@ dataStructures.forEach(PrefixDictionary => {
 
         pd.addWord('ada');
 
-        expect(pd.lookupCode('ada')).toStrictEqual(['ada']);
+        verifyLookupResults(
+          pd.lookupCode('ada'),
+          ['ada']
+        );
       });
 
       it('returns an empty array if no words match', () => {
@@ -159,7 +175,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupCode('nope')).toStrictEqual([]);
+        verifyLookupResults(
+          pd.lookupCode('nope'),
+          []
+        );
       });
 
       it('ignores words where the code prefix matches', () => {
@@ -170,7 +189,10 @@ dataStructures.forEach(PrefixDictionary => {
 
         pd.addWord('adamant');
 
-        expect(pd.lookupCode('ada')).toStrictEqual(['ada']);
+        verifyLookupResults(
+          pd.lookupCode('ada'),
+          ['ada']
+        );
       });
     });
 
@@ -181,7 +203,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['ada']
+        );
       });
 
       it('finds a word where the code starts with the prefix', () => {
@@ -190,7 +215,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['adamant']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['adamant']
+        );
       });
 
       it('finds all words matching the prefix', () => {
@@ -199,7 +227,10 @@ dataStructures.forEach(PrefixDictionary => {
           lowerCase
         );
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada', 'ADA', 'AdA', 'adamant', 'AdAmAnT']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['ada', 'ADA', 'AdA', 'adamant', 'AdAmAnT']
+        );
       });
 
       it('finds words added after initialization', () => {
@@ -211,7 +242,10 @@ dataStructures.forEach(PrefixDictionary => {
         pd.addWord('ADA');
         pd.addWord('adamant');
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada', 'ADA', 'adamant']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['ada', 'ADA', 'adamant']
+        );
       });
 
       it('finds words added along an existing path', () => {
@@ -222,7 +256,10 @@ dataStructures.forEach(PrefixDictionary => {
 
         pd.addWord('ada');
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada', 'adamant']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['ada', 'adamant']
+        );
       });
 
       it('returns an empty array if no words match', () => {
@@ -231,7 +268,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupPrefix('nope')).toStrictEqual([]);
+        verifyLookupResults(
+          pd.lookupPrefix('nope'),
+          []
+        );
       });
 
       it('ignores words where the code is the prefix of the prefix', () => {
@@ -240,7 +280,10 @@ dataStructures.forEach(PrefixDictionary => {
           identity
         );
 
-        expect(pd.lookupPrefix('ada')).toStrictEqual(['ada']);
+        verifyLookupResults(
+          pd.lookupPrefix('ada'),
+          ['ada']
+        );
       })
     });
   });
