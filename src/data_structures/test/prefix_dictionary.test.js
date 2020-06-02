@@ -1,10 +1,12 @@
 import WordList from "../word_list";
 import Trie from "../trie";
+import NonrecursiveTrie from '../nonrecursive_trie';
 import CompressedTrie from "../compressed_trie";
 
 const dataStructures = [
   WordList,
   Trie,
+  NonrecursiveTrie,
   CompressedTrie,
 ];
 
