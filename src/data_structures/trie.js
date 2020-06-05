@@ -1,11 +1,6 @@
-class TrieNode {
-  constructor() {
-    this.words = [];
-    this.children = {};
-  }
-}
+import TrieNode from './trie_node';
 
-class NonrecursiveTrie {
+class Trie {
   constructor(words, buildCode, Node=TrieNode) {
     this.Node = Node;
     this.buildCode = buildCode;
@@ -16,12 +11,28 @@ class NonrecursiveTrie {
 
   addWord(word) {
     const code = this.buildCode(word);
+
+    if (this._root.insert(word, code)) {
+      this._count += 1;
+    }
   }
 
   lookupCode(code) {
+    const node = this._root.lookup(code);
+    if (node) {
+      return node.words;
+    } else {
+      return [];
+    }
   }
 
   lookupPrefix(codePrefix) {
+    const node = this._root.lookup(codePrefix);
+    if (node) {
+      return node.gatherWords();
+    } else {
+      return [];
+    }
   }
 
   count() {
@@ -29,4 +40,4 @@ class NonrecursiveTrie {
   }
 }
 
-export default NonrecursiveTrie;
+export default Trie;
