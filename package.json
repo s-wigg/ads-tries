@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch",
+    "grade": "jest",
     "build": "webpack",
     "start": "webpack-dev-server",
     "deploy": "npm run build && gh-pages -d dist"

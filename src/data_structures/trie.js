@@ -5,7 +5,7 @@ class TrieNode {
   }
 }
 
-class NonrecursiveTrie {
+class Trie {
   constructor(words, buildCode, Node=TrieNode) {
     this.Node = Node;
     this.buildCode = buildCode;
@@ -29,4 +29,4 @@ class NonrecursiveTrie {
   }
 }
 
-export default NonrecursiveTrie;
+export default Trie;

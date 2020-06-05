@@ -1,14 +1,4 @@
-import WordList from "../word_list";
-import Trie from "../trie";
-import NonrecursiveTrie from '../nonrecursive_trie';
-import CompressedTrie from "../compressed_trie";
-
-const dataStructures = [
-  WordList,
-  Trie,
-  NonrecursiveTrie,
-  CompressedTrie,
-];
+import dataStructures from '../data_structure_list';
 
 const identity = (word) => word;
 
@@ -18,7 +8,7 @@ const verifyLookupResults = (received, expected) => {
   expect(received.sort()).toStrictEqual(expected.sort());
 }
 
-dataStructures.forEach(PrefixDictionary => {
+Object.values(dataStructures).forEach(PrefixDictionary => {
   describe(PrefixDictionary, () => {
     describe('constructor', () => {
       it('creates a trie with a count of 0 if no words are given', () => {
