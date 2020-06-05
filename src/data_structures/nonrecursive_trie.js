@@ -1,5 +1,5 @@
 class NRTrieNode {
-  constructor(word) {
+  constructor() {
     this.words = [];
     this.children = {};
   }
@@ -24,18 +24,14 @@ class NonrecursiveTrie {
 
   addWord(word) {
     const code = this.buildCode(word);
-
     let node = this._root;
 
-    for (let index = 0; index < code.length; index += 1) {
-      const letter = code[index];
-      let child = node.children[letter];
-      if (!child) {
-        child = new this.Node();
-        node.children[letter] = child;
+    for (const radix of code) {
+      if (!node.children[radix]) {
+        node.children[radix] = new this.Node();
       }
 
-      node = child;
+      node = node.children[radix];
     }
 
     if (!node.words.includes(word)) {

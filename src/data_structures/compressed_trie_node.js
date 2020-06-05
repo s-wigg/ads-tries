@@ -61,7 +61,7 @@ class CompressedTrieNode {
 
     } else {
       // No matching child found
-      // Create a new node, add it to our list using all remaining code letters
+      // Create a new node, add it to our list using all remaining code radixs
       child = new CompressedTrieNode();
 
       const suffix = code.slice(index);

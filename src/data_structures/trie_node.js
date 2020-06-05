@@ -14,11 +14,11 @@ class TrieNode {
       return true;
     }
 
-    const letter = code[index];
-    let child = this.children[letter];
+    const radix = code[index];
+    let child = this.children[radix];
     if (!child) {
       child = new TrieNode();
-      this.children[letter] = child;
+      this.children[radix] = child;
     }
     return child.insert(word, code, index + 1);
   }
@@ -28,8 +28,8 @@ class TrieNode {
       return this;
     }
 
-    const letter = code[index];
-    let child = this.children[letter];
+    const radix = code[index];
+    let child = this.children[radix];
     if (child) {
       return child.lookup(code, index + 1);
     } else {
